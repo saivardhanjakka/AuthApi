@@ -22,8 +22,10 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
-
+     
     @Column(nullable = false)
+    private String phno;  
+    
     private String password;
 
     @Column(nullable = false)

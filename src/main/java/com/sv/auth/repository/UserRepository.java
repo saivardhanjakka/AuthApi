@@ -9,5 +9,6 @@ import com.sv.auth.entity.User;
 public interface UserRepository extends JpaRepository<User,Long> {
 	
 	public User findByEmail(String email);
+	public User findByName(String name);
 
 }

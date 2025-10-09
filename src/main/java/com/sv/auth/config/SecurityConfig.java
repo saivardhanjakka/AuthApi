@@ -8,13 +8,18 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.sv.auth.filter.AppFilter;
 import com.sv.auth.service.UserService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+	@Autowired
+	private AppFilter filter;
 	@Autowired
 	private UserService userService;
 	@Bean
@@ -37,18 +42,22 @@ public class SecurityConfig {
 		return config.getAuthenticationManager();
 		
 	}
-	@Bean
-	public SecurityFilterChain security(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((req)->{
-			req.requestMatchers("/register","/login")
-			.permitAll()
-			.anyRequest()
-			.authenticated();
-		});
-		return http.csrf().disable().build();
-		
-	}
 
 	
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/login","/api/register").permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/api/**")
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authProvider())
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();
 
+    }
 }

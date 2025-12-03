@@ -17,6 +17,8 @@ import com.sv.auth.entity.User;
 import com.sv.auth.service.JwtService;
 import com.sv.auth.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
@@ -62,7 +64,7 @@ public ResponseEntity<String> loginCheck(@RequestBody User user) {
 		}
 
 	} catch (Exception e) {
-		//logger
+		log.info("Authentication failed: " + e.getMessage());
 	}
 
 	return new ResponseEntity<String>("Invalid Credentials", HttpStatus.BAD_REQUEST);

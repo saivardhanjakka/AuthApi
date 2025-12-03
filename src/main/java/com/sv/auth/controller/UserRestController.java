@@ -65,6 +65,7 @@ public ResponseEntity<String> loginCheck(@RequestBody User user) {
 
 	} catch (Exception e) {
 		log.info("Authentication failed: " + e.getMessage());
+		log.info("Invalid Credentials");
 	}
 
 	return new ResponseEntity<String>("Invalid Credentials", HttpStatus.BAD_REQUEST);
